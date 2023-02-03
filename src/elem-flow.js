@@ -15,17 +15,9 @@ import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutl
 import DoneAllOutlinedIcon from '@mui/icons-material/DoneAllOutlined';
 import DoDisturbOutlinedIcon from '@mui/icons-material/DoDisturbOutlined';
 
-/*
-1 - criar ponto env
-2 - link github https://github.com/ueredeveloper/rjs-drainage-elem-flow.git
+function ElemFlow({ demanda }) {
 
-*/
-
-
-
-function ElemFlow({ finalidades }) {
-
-    const [_finalidades, _setFinalidades] = useState(finalidades);
+    const [_demanda, _setDemanda] = useState(demanda);
 
     const [isEditable, setIsEditable] = useState({
         vazao_dia: false,
@@ -33,7 +25,7 @@ function ElemFlow({ finalidades }) {
         periodo_d: false
     })
 
-    const onToggleEditMode = (int_id, obj) => {
+    const onToggleEditMode = (obj) => {
 
         setIsEditable(prev => {
             return {
@@ -44,27 +36,20 @@ function ElemFlow({ finalidades }) {
 
     };
 
-    const onChange = (e, row, obj) => {
-        /* if (!previous[row.id]) {
-           setPrevious((state) => ({ ...state, [row.id]: row }));
-         }*/
+    const onChange = (e, index) => {
+
         const { name, value } = e.target;
-        const { int_id } = row;
 
-        let newRows = finalidades.map((_row) => {
-            if (_row.int_id === int_id) {
-                let __row = _row
-                __row[name][obj] = value
-                return __row
+        let newDem = _demanda.map((_dem, i) => {
+
+            if (i === index) {
+                return { ..._dem, [name]: value }
             }
-            return _row
-
-        });
-
-        _setFinalidades(newRows)
+            return _dem;
+        })
+        _setDemanda(newDem)
 
     };
-
 
     return (
         <Box>
@@ -90,173 +75,152 @@ function ElemFlow({ finalidades }) {
                                 <TableCell >Dez</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody >
-                            {finalidades.map((row) => (
-                                <TableRow key={'_' + row.id} sx={{ '& .MuiTableCell-sizeMedium': { px: 1, py: 0 } }}>
-                                    {/* botões */}
-                                    <TableCell>
+                        <TableBody>
+                            <TableRow sx={{ '& .MuiTableCell-sizeMedium': { px: 1, py: 0 } }}>
+                                {/* botões de edião*/}
+                                <TableCell>
+                                    {isEditable.vazao_dia ? (
+                                        <>
+                                            <IconButton
+                                                aria-label="done"
+                                                onClick={() => onToggleEditMode('vazao_dia')}
+                                            >
+                                                <DoneAllOutlinedIcon sx={{ fontSize: 19 }} />
+                                            </IconButton>
+                                            <IconButton
+                                                aria-label="revert"
+                                                onClick={() => onToggleEditMode('vazao_dia')}
+                                            >
+                                                <DoDisturbOutlinedIcon sx={{ fontSize: 19 }} />
+                                            </IconButton>
+                                        </>
+                                    ) : (
+                                        <IconButton
+                                            aria-label="delete"
+                                            onClick={() => onToggleEditMode('vazao_dia')}
+                                        >
+                                            <ModeEditOutlineOutlinedIcon sx={{ fontSize: 19 }} />
+                                        </IconButton>
+                                    )}
+                                </TableCell>
+                                <TableCell>{'Vazão (l/dia)'}</TableCell>
+                                {_demanda.map((row, i) =>
+                                (
+                                    <TableCell key={'__' + i}>
 
                                         {isEditable.vazao_dia ? (
-                                            <>
-                                                <IconButton
-                                                    aria-label="done"
-                                                    onClick={() => onToggleEditMode(row.int_id, 'vazao_dia')}
-                                                >
-                                                    <DoneAllOutlinedIcon sx={{ fontSize: 19 }} />
-                                                </IconButton>
-                                                <IconButton
-                                                    aria-label="revert"
-                                                    onClick={() => onToggleEditMode(row.int_id, 'vazao_dia')}
-                                                >
-                                                    <DoDisturbOutlinedIcon sx={{ fontSize: 19 }} />
-                                                </IconButton>
-                                            </>
+                                            <TextField
+                                                name={'vazao_dia'}
+                                                value={row.vazao_dia}
+
+                                                onChange={(e) => onChange(e, i)}
+                                                variant="standard"
+                                            />
                                         ) : (
-                                            <IconButton
-                                                aria-label="delete"
-                                                onClick={() => onToggleEditMode(row.int_id, 'vazao_dia')}
-                                            >
-                                                <ModeEditOutlineOutlinedIcon sx={{ fontSize: 19 }} />
-                                            </IconButton>
+                                            row.vazao_dia
                                         )}
                                     </TableCell>
-                                    {/* info */}
-                                    <TableCell>{'Vazão (l/dia)'}</TableCell>
+                                )
+                                )
+                                }
+                            </TableRow>
 
-                                    {['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'].map((m, i) => {
-
-                                        return (
-                                            <TableCell key={'__' + i}>
-                                                {isEditable.vazao_dia ? (
-                                                    <TextField
-                                                        name={m}
-                                                        value={row[m].vazao_dia}
-
-                                                        onChange={(e) => onChange(e, row, 'vazao_dia')}
-                                                        variant="standard"
-                                                    />
-                                                ) : (
-                                                    row[m].vazao_dia
-                                                )}
-
-                                            </TableCell>)
-                                    })}
-
-
-                                </TableRow>
-
-                            ))}
-                            {finalidades.map((row) => (
-                                <TableRow key={'_' + row.id} sx={{ '& .MuiTableCell-sizeMedium': { px: 1, py: 0 } }}>
-                                    {/* botões */}
-                                    <TableCell>
-
+                            <TableRow sx={{ '& .MuiTableCell-sizeMedium': { px: 1, py: 0 } }}>
+                                {/* botões de edião*/}
+                                <TableCell>
+                                    {isEditable.tempo_h ? (
+                                        <>
+                                            <IconButton
+                                                aria-label="done"
+                                                onClick={() => onToggleEditMode('tempo_h')}
+                                            >
+                                                <DoneAllOutlinedIcon sx={{ fontSize: 19 }} />
+                                            </IconButton>
+                                            <IconButton
+                                                aria-label="revert"
+                                                onClick={() => onToggleEditMode('tempo_h')}
+                                            >
+                                                <DoDisturbOutlinedIcon sx={{ fontSize: 19 }} />
+                                            </IconButton>
+                                        </>
+                                    ) : (
+                                        <IconButton
+                                            aria-label="delete"
+                                            onClick={() => onToggleEditMode('tempo_h')}
+                                        >
+                                            <ModeEditOutlineOutlinedIcon sx={{ fontSize: 19 }} />
+                                        </IconButton>
+                                    )}
+                                </TableCell>
+                                <TableCell>{'Tempo (h/dia)'}</TableCell>
+                                {_demanda.map((row, i) =>
+                                (
+                                    <TableCell key={'__' + i}>
                                         {isEditable.tempo_h ? (
-                                            <>
-                                                <IconButton
-                                                    aria-label="done"
-                                                    onClick={() => onToggleEditMode(row.int_id, 'tempo_h')}
-                                                >
-                                                    <DoneAllOutlinedIcon sx={{ fontSize: 19 }} />
-                                                </IconButton>
-                                                <IconButton
-                                                    aria-label="revert"
-                                                    onClick={() => onToggleEditMode(row.int_id, 'tempo_h')}
-                                                >
-                                                    <DoDisturbOutlinedIcon sx={{ fontSize: 19 }} />
-                                                </IconButton>
-                                            </>
+                                            <TextField
+                                                name={'tempo_h'}
+                                                value={row.tempo_h}
+
+                                                onChange={(e) => onChange(e, i)}
+                                                variant="standard"
+                                            />
                                         ) : (
-                                            <IconButton
-                                                aria-label="delete"
-                                                onClick={() => onToggleEditMode(row.int_id, 'tempo_h')}
-                                            >
-                                                <ModeEditOutlineOutlinedIcon sx={{ fontSize: 19 }} />
-                                            </IconButton>
+                                            row.tempo_h
                                         )}
                                     </TableCell>
-                                    {/* info */}
-                                    <TableCell>{'Tempo (h/dia)'}</TableCell>
+                                )
+                                )
+                                }
+                            </TableRow>
 
-                                    {['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'].map((m, i) => {
-
-                                        return (
-                                            <TableCell key={'__' + i}>
-                                                {
-                                                    isEditable.tempo_h ?
-                                                        (
-                                                            <TextField
-                                                                name={m}
-                                                                value={row[m].tempo_h}
-
-                                                                onChange={(e) => onChange(e, row, 'tempo_h')}
-                                                                variant="standard"
-                                                            />
-                                                        ) : (
-                                                            row[m].tempo_h
-                                                        )
-                                                }
-                                            </TableCell>)
-                                    })}
-
-
-                                </TableRow>
-
-                            ))}
-                            {finalidades.map((row) => (
-                                <TableRow key={'_' + row.id} sx={{ '& .MuiTableCell-sizeMedium': { px: 1, py: 0 } }}>
-                                    {/* botões */}
-                                    <TableCell>
-
+                            <TableRow sx={{ '& .MuiTableCell-sizeMedium': { px: 1, py: 0 } }}>
+                                {/* botões de edião*/}
+                                <TableCell>
+                                    {isEditable.tempo_h ? (
+                                        <>
+                                            <IconButton
+                                                aria-label="done"
+                                                onClick={() => onToggleEditMode('periodo_d')}
+                                            >
+                                                <DoneAllOutlinedIcon sx={{ fontSize: 19 }} />
+                                            </IconButton>
+                                            <IconButton
+                                                aria-label="revert"
+                                                onClick={() => onToggleEditMode('periodo_d')}
+                                            >
+                                                <DoDisturbOutlinedIcon sx={{ fontSize: 19 }} />
+                                            </IconButton>
+                                        </>
+                                    ) : (
+                                        <IconButton
+                                            aria-label="delete"
+                                            onClick={() => onToggleEditMode('periodo_d')}
+                                        >
+                                            <ModeEditOutlineOutlinedIcon sx={{ fontSize: 19 }} />
+                                        </IconButton>
+                                    )}
+                                </TableCell>
+                                <TableCell>{'Período (dias/mês)'}</TableCell>
+                                {_demanda.map((row, i) =>
+                                (
+                                    <TableCell key={'__' + i}>
                                         {isEditable.periodo_d ? (
-                                            <>
-                                                <IconButton
-                                                    aria-label="done"
-                                                    onClick={() => onToggleEditMode(row.int_id, 'periodo_d')}
-                                                >
-                                                    <DoneAllOutlinedIcon sx={{ fontSize: 19 }} />
-                                                </IconButton>
-                                                <IconButton
-                                                    aria-label="revert"
-                                                    onClick={() => onToggleEditMode(row.int_id, 'periodo_d')}
-                                                >
-                                                    <DoDisturbOutlinedIcon sx={{ fontSize: 19 }} />
-                                                </IconButton>
-                                            </>
+                                            <TextField
+                                                name={'periodo_d'}
+                                                value={row.periodo_d}
+
+                                                onChange={(e) => onChange(e, i)}
+                                                variant="standard"
+                                            />
                                         ) : (
-                                            <IconButton
-                                                aria-label="delete"
-                                                onClick={() => onToggleEditMode(row.int_id, 'periodo_d')}
-                                            >
-                                                <ModeEditOutlineOutlinedIcon sx={{ fontSize: 19 }} />
-                                            </IconButton>
+                                            row.periodo_d
                                         )}
                                     </TableCell>
-                                    {/* info */}
-                                    <TableCell>{'Tempo (h/dia)'}</TableCell>
+                                )
+                                )
+                                }
+                            </TableRow>
 
-                                    {['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'].map((m, i) => {
-
-                                        return (
-                                            <TableCell key={'__' + i}>
-                                                {isEditable.periodo_d ? (
-                                                    <TextField
-                                                        name={m}
-                                                        value={row[m].periodo_d}
-
-                                                        onChange={(e) => onChange(e, row, 'periodo_d')}
-                                                        variant="standard"
-                                                    />
-                                                ) : (
-                                                    row[m].periodo_d
-                                                )}
-                                            </TableCell>)
-                                    })}
-
-
-                                </TableRow>
-
-                            ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
